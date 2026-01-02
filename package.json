@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "main -d build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -81,9 +83,5 @@
     "vite": "^5.4.19"
   },
   
-    "homepage": "https://Joehdz12.github.io/TUREPO",
-    "scripts": {
-      "predeploy": "npm run build",
-      "deploy": "gh-pages -d build"
-    }
+    "homepage": "https://joehdz12.github.io/dermacare-connect"
 }
