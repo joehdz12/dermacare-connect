@@ -18,7 +18,7 @@ const AboutSection = () => {
               <img
                 src={doctorPortrait}
                 alt="Dr. Alvaro J. Ramos-Rodríguez"
-                className="w-full aspect-square object-cover"
+                className="w-full aspect-square object-cover object-top"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground rounded-xl p-6 shadow-card hidden sm:block">
