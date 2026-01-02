@@ -1,17 +1,34 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToSection = (sectionId: string) => {
+    setIsMenuOpen(false);
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        element?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      element?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const navLinks = [
-    { name: "Inicio", href: "/#inicio", isRoute: false },
-    { name: "Servicios", href: "/#servicios", isRoute: false },
+    { name: "Inicio", sectionId: "inicio", isRoute: false },
+    { name: "Servicios", sectionId: "servicios", isRoute: false },
     { name: "Productos", href: "/productos", isRoute: true },
-    { name: "Reservar Cita", href: "/#citas", isRoute: false },
-    { name: "Contacto", href: "/#contacto", isRoute: false },
+    { name: "Reservar Cita", sectionId: "citas", isRoute: false },
+    { name: "Contacto", sectionId: "contacto", isRoute: false },
   ];
 
   return (
@@ -30,19 +47,19 @@ const Header = () => {
               link.isRoute ? (
                 <Link
                   key={link.name}
-                  to={link.href}
+                  to={link.href!}
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   {link.name}
                 </Link>
               ) : (
-                <a
+                <button
                   key={link.name}
-                  href={link.href}
+                  onClick={() => scrollToSection(link.sectionId!)}
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
                 >
                   {link.name}
-                </a>
+                </button>
               )
             )}
           </div>
@@ -52,8 +69,8 @@ const Header = () => {
               <Phone className="w-4 h-4" />
               +1 234 567 890
             </a>
-            <Button asChild>
-              <a href="#citas">Agendar Cita</a>
+            <Button onClick={() => scrollToSection("citas")}>
+              Agendar Cita
             </Button>
           </div>
 
@@ -74,25 +91,24 @@ const Header = () => {
                 link.isRoute ? (
                   <Link
                     key={link.name}
-                    to={link.href}
+                    to={link.href!}
                     className="text-base font-medium text-foreground hover:text-primary transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
                   </Link>
                 ) : (
-                  <a
+                  <button
                     key={link.name}
-                    href={link.href}
-                    className="text-base font-medium text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => scrollToSection(link.sectionId!)}
+                    className="text-base font-medium text-foreground hover:text-primary transition-colors text-left"
                   >
                     {link.name}
-                  </a>
+                  </button>
                 )
               )}
-              <Button className="mt-2" asChild>
-                <a href="#citas">Agendar Cita</a>
+              <Button className="mt-2" onClick={() => scrollToSection("citas")}>
+                Agendar Cita
               </Button>
             </div>
           </div>

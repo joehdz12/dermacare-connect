@@ -1,15 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react";
 
-const footerLinks = [
-  { name: "Inicio", href: "/#inicio", isRoute: false },
-  { name: "Servicios", href: "/#servicios", isRoute: false },
-  { name: "Productos", href: "/productos", isRoute: true },
-  { name: "Reservar Cita", href: "/#citas", isRoute: false },
-  { name: "Contacto", href: "/#contacto", isRoute: false },
-];
-
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        el?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  };
+
+  const footerLinks = [
+    { name: "Inicio", sectionId: "inicio", isRoute: false },
+    { name: "Servicios", sectionId: "servicios", isRoute: false },
+    { name: "Productos", href: "/productos", isRoute: true },
+    { name: "Reservar Cita", sectionId: "citas", isRoute: false },
+    { name: "Contacto", sectionId: "contacto", isRoute: false },
+  ];
+
   return (
     <footer id="contacto" className="section-padding bg-foreground text-background">
       <div className="container-narrow">
@@ -86,18 +101,18 @@ const Footer = () => {
                 <li key={link.name}>
                   {link.isRoute ? (
                     <Link
-                      to={link.href}
+                      to={link.href!}
                       className="text-background/70 hover:text-primary transition-colors"
                     >
                       {link.name}
                     </Link>
                   ) : (
-                    <a
-                      href={link.href}
+                    <button
+                      onClick={() => scrollToSection(link.sectionId!)}
                       className="text-background/70 hover:text-primary transition-colors"
                     >
                       {link.name}
-                    </a>
+                    </button>
                   )}
                 </li>
               ))}
