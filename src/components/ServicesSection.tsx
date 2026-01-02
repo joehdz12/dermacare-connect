@@ -5,25 +5,21 @@ const services = [
     icon: Stethoscope,
     title: "Consulta General",
     description: "Evaluación completa de la piel para detectar y tratar diversas condiciones dermatológicas.",
-    price: "$80",
   },
   {
     icon: Sparkles,
     title: "Tratamientos Faciales",
     description: "Procedimientos estéticos para rejuvenecer y mejorar la apariencia de tu piel.",
-    price: "$150",
   },
   {
     icon: Syringe,
     title: "Dermatología Estética",
     description: "Botox, rellenos y otros tratamientos para realzar tu belleza natural.",
-    price: "$250",
   },
   {
     icon: Sun,
     title: "Cuidado Solar",
     description: "Evaluación de lunares, tratamiento de daño solar y prevención del cáncer de piel.",
-    price: "$100",
   },
 ];
 
@@ -57,12 +53,9 @@ const ServicesSection = () => {
               <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
                 {service.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-muted-foreground">
                 {service.description}
               </p>
-              <span className="text-lg font-semibold text-primary">
-                Desde {service.price}
-              </span>
             </div>
           ))}
         </div>

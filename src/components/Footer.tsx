@@ -1,4 +1,13 @@
+import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react";
+
+const footerLinks = [
+  { name: "Inicio", href: "/#inicio", isRoute: false },
+  { name: "Servicios", href: "/#servicios", isRoute: false },
+  { name: "Productos", href: "/productos", isRoute: true },
+  { name: "Reservar Cita", href: "/#citas", isRoute: false },
+  { name: "Contacto", href: "/#contacto", isRoute: false },
+];
 
 const Footer = () => {
   return (
@@ -7,7 +16,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div>
             <h3 className="font-serif text-2xl font-semibold mb-4">
-              Dra. <span className="text-primary">Martínez</span>
+              Dr. Alvaro J. <span className="text-primary">Ramos</span>
             </h3>
             <p className="text-background/70 mb-6">
               Clínica de dermatología especializada en el cuidado integral de tu piel con tecnología de vanguardia.
@@ -43,8 +52,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-background/70">
                 <Mail className="w-5 h-5 text-primary" />
-                <a href="mailto:info@dramartinez.com" className="hover:text-primary transition-colors">
-                  info@dramartinez.com
+                <a href="mailto:info@drramos.com" className="hover:text-primary transition-colors">
+                  info@drramos.com
                 </a>
               </li>
             </ul>
@@ -73,24 +82,31 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-2">
-              {["Inicio", "Servicios", "Productos", "Reservar Cita", "Contacto"].map(
-                (link) => (
-                  <li key={link}>
-                    <a
-                      href={`#${link.toLowerCase().replace(" ", "-")}`}
+              {footerLinks.map((link) => (
+                <li key={link.name}>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
                       className="text-background/70 hover:text-primary transition-colors"
                     >
-                      {link}
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-background/70 hover:text-primary transition-colors"
+                    >
+                      {link.name}
                     </a>
-                  </li>
-                )
-              )}
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-background/10 text-center text-background/50 text-sm">
-          <p>© {new Date().getFullYear()} Dra. María Martínez - Dermatología. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Dr. Alvaro J. Ramos - Dermatología. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

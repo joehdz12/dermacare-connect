@@ -7,11 +7,11 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Inicio", href: "#inicio" },
-    { name: "Servicios", href: "#servicios" },
-    { name: "Productos", href: "#productos" },
-    { name: "Reservar Cita", href: "#citas" },
-    { name: "Contacto", href: "#contacto" },
+    { name: "Inicio", href: "/#inicio", isRoute: false },
+    { name: "Servicios", href: "/#servicios", isRoute: false },
+    { name: "Productos", href: "/productos", isRoute: true },
+    { name: "Reservar Cita", href: "/#citas", isRoute: false },
+    { name: "Contacto", href: "/#contacto", isRoute: false },
   ];
 
   return (
@@ -20,21 +20,31 @@ const Header = () => {
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <span className="font-serif text-2xl font-semibold text-foreground">
-              Dra. <span className="text-primary">Martínez</span>
+              Dr. Alvaro J. <span className="text-primary">Ramos</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.isRoute ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  {link.name}
+                </a>
+              )
+            )}
           </div>
 
           <div className="hidden md:flex items-center gap-4">
@@ -60,16 +70,27 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden pt-4 pb-2 animate-fade-in">
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-base font-medium text-foreground hover:text-primary transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.name}
-                </a>
-              ))}
+              {navLinks.map((link) =>
+                link.isRoute ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-base font-medium text-foreground hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="text-base font-medium text-foreground hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </a>
+                )
+              )}
               <Button className="mt-2" asChild>
                 <a href="#citas">Agendar Cita</a>
               </Button>

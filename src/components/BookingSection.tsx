@@ -1,55 +1,71 @@
 import { useState } from "react";
-import { format, addDays, isSameDay, startOfToday } from "date-fns";
+import { format, addDays, startOfToday } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Check, Clock, CreditCard, Calendar as CalendarIcon } from "lucide-react";
+import { Check, Clock, CreditCard, Calendar as CalendarIcon, User, Phone } from "lucide-react";
 
 const timeSlots = [
-  "09:00",
-  "09:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
+  "9:00 AM",
+  "9:30 AM",
+  "10:00 AM",
+  "10:30 AM",
+  "11:00 AM",
+  "11:30 AM",
+  "2:00 PM",
+  "2:30 PM",
+  "3:00 PM",
+  "3:30 PM",
+  "4:00 PM",
+  "4:30 PM",
 ];
 
-const services = [
-  { id: "consulta", name: "Consulta General", price: 80, duration: "30 min" },
-  { id: "facial", name: "Tratamiento Facial", price: 150, duration: "60 min" },
-  { id: "estetica", name: "Dermatología Estética", price: 250, duration: "45 min" },
-  { id: "solar", name: "Evaluación de Lunares", price: 100, duration: "30 min" },
-];
+const APPOINTMENT_PRICE = 25;
 
-// Simulate unavailable slots
 const getUnavailableSlots = (date: Date) => {
   const dayOfWeek = date.getDay();
-  if (dayOfWeek === 0 || dayOfWeek === 6) return timeSlots; // Weekends closed
-  if (dayOfWeek === 1) return ["09:00", "09:30", "14:00"]; // Monday busy morning
-  if (dayOfWeek === 3) return ["15:00", "15:30", "16:00", "16:30"]; // Wednesday afternoon busy
-  return ["10:00", "14:30"]; // Some random slots taken
+  if (dayOfWeek === 0 || dayOfWeek === 6) return timeSlots;
+  if (dayOfWeek === 1) return ["9:00 AM", "9:30 AM", "2:00 PM"];
+  if (dayOfWeek === 3) return ["3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"];
+  return ["10:00 AM", "2:30 PM"];
 };
 
 const BookingSection = () => {
   const [step, setStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [errors, setErrors] = useState<{ fullName?: string; phoneNumber?: string }>({});
 
   const today = startOfToday();
   const unavailableSlots = selectedDate ? getUnavailableSlots(selectedDate) : [];
-  const selectedServiceData = services.find((s) => s.id === selectedService);
+
+  const validateStep2 = () => {
+    const newErrors: { fullName?: string; phoneNumber?: string } = {};
+
+    if (!fullName.trim()) {
+      newErrors.fullName = "El nombre completo es requerido";
+    } else if (fullName.trim().split(" ").length < 2) {
+      newErrors.fullName = "Ingresa tu nombre y apellido";
+    }
+
+    if (!phoneNumber.trim()) {
+      newErrors.phoneNumber = "El número de teléfono es requerido";
+    } else if (!/^[\d\s\-+()]{10,}$/.test(phoneNumber.trim())) {
+      newErrors.phoneNumber = "Ingresa un número de teléfono válido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleContinue = () => {
-    if (step === 1 && selectedService) setStep(2);
-    if (step === 2 && selectedDate && selectedTime) setStep(3);
+    if (step === 1 && selectedDate && selectedTime) setStep(2);
+    if (step === 2 && validateStep2()) setStep(3);
   };
 
   const handleBack = () => {
@@ -67,32 +83,32 @@ const BookingSection = () => {
             Agenda tu Cita
           </h2>
           <p className="text-muted-foreground">
-            Reserva tu cita en línea de forma rápida y sencilla. 
-            Selecciona el servicio, fecha y hora que más te convengan.
+            Reserva tu cita en línea de forma rápida y sencilla por solo{" "}
+            <span className="font-semibold text-primary">${APPOINTMENT_PRICE}</span>.
           </p>
         </div>
 
         {/* Progress Steps */}
-        <div className="flex items-center justify-center gap-4 mb-12">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mb-12">
           {[
-            { num: 1, label: "Servicio" },
-            { num: 2, label: "Fecha y Hora" },
+            { num: 1, label: "Fecha y Hora" },
+            { num: 2, label: "Datos" },
             { num: 3, label: "Confirmación" },
           ].map((s, idx) => (
             <div key={s.num} className="flex items-center">
               <div
                 className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors",
+                  "flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-semibold transition-colors text-sm sm:text-base",
                   step >= s.num
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground"
                 )}
               >
-                {step > s.num ? <Check className="w-5 h-5" /> : s.num}
+                {step > s.num ? <Check className="w-4 h-4 sm:w-5 sm:h-5" /> : s.num}
               </div>
               <span
                 className={cn(
-                  "ml-2 text-sm font-medium hidden sm:block",
+                  "ml-1 sm:ml-2 text-xs sm:text-sm font-medium hidden sm:block",
                   step >= s.num ? "text-foreground" : "text-muted-foreground"
                 )}
               >
@@ -101,7 +117,7 @@ const BookingSection = () => {
               {idx < 2 && (
                 <div
                   className={cn(
-                    "w-12 sm:w-20 h-0.5 mx-2 sm:mx-4",
+                    "w-8 sm:w-16 h-0.5 mx-1 sm:mx-3",
                     step > s.num ? "bg-primary" : "bg-muted"
                   )}
                 />
@@ -111,55 +127,8 @@ const BookingSection = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Step 1: Select Service */}
+          {/* Step 1: Select Date & Time */}
           {step === 1 && (
-            <div className="animate-fade-in">
-              <h3 className="font-serif text-xl font-semibold text-foreground mb-6 text-center">
-                Selecciona un Servicio
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {services.map((service) => (
-                  <button
-                    key={service.id}
-                    onClick={() => setSelectedService(service.id)}
-                    className={cn(
-                      "p-6 rounded-xl text-left transition-all duration-200 border-2",
-                      selectedService === service.id
-                        ? "border-primary bg-primary/5 shadow-card"
-                        : "border-border bg-card hover:border-primary/50 hover:shadow-soft"
-                    )}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-serif text-lg font-semibold text-foreground mb-1">
-                          {service.name}
-                        </h4>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {service.duration}
-                        </p>
-                      </div>
-                      <span className="text-xl font-bold text-primary">
-                        ${service.price}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-              <div className="mt-8 flex justify-center">
-                <Button
-                  size="lg"
-                  onClick={handleContinue}
-                  disabled={!selectedService}
-                >
-                  Continuar
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Select Date & Time */}
-          {step === 2 && (
             <div className="animate-fade-in">
               <h3 className="font-serif text-xl font-semibold text-foreground mb-6 text-center">
                 Selecciona Fecha y Hora
@@ -221,10 +190,7 @@ const BookingSection = () => {
                   )}
                 </div>
               </div>
-              <div className="mt-8 flex justify-center gap-4">
-                <Button variant="outline" size="lg" onClick={handleBack}>
-                  Atrás
-                </Button>
+              <div className="mt-8 flex justify-center">
                 <Button
                   size="lg"
                   onClick={handleContinue}
@@ -236,10 +202,78 @@ const BookingSection = () => {
             </div>
           )}
 
-          {/* Step 3: Confirmation */}
-          {step === 3 && selectedDate && selectedServiceData && (
+          {/* Step 2: Personal Data */}
+          {step === 2 && (
             <div className="animate-fade-in max-w-xl mx-auto">
-              <div className="bg-card rounded-xl p-8 shadow-card">
+              <div className="bg-card rounded-xl p-6 sm:p-8 shadow-soft">
+                <h3 className="font-serif text-xl font-semibold text-foreground mb-6 text-center">
+                  Datos del Paciente
+                </h3>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="fullName" className="flex items-center gap-2 text-base font-medium text-foreground">
+                      <User className="w-5 h-5 text-primary" />
+                      Nombre Completo
+                    </Label>
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="Ej: Juan Pérez García"
+                      value={fullName}
+                      onChange={(e) => {
+                        setFullName(e.target.value);
+                        if (errors.fullName) setErrors({ ...errors, fullName: undefined });
+                      }}
+                      className={cn(
+                        "h-12 text-base px-4",
+                        errors.fullName && "border-destructive"
+                      )}
+                    />
+                    {errors.fullName && (
+                      <p className="text-sm text-destructive">{errors.fullName}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="phoneNumber" className="flex items-center gap-2 text-base font-medium text-foreground">
+                      <Phone className="w-5 h-5 text-primary" />
+                      Número de Teléfono
+                    </Label>
+                    <Input
+                      id="phoneNumber"
+                      type="tel"
+                      placeholder="Ej: +1 234 567 8900"
+                      value={phoneNumber}
+                      onChange={(e) => {
+                        setPhoneNumber(e.target.value);
+                        if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: undefined });
+                      }}
+                      className={cn(
+                        "h-12 text-base px-4",
+                        errors.phoneNumber && "border-destructive"
+                      )}
+                    />
+                    {errors.phoneNumber && (
+                      <p className="text-sm text-destructive">{errors.phoneNumber}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 flex justify-center gap-4">
+                <Button variant="outline" size="lg" onClick={handleBack}>
+                  Atrás
+                </Button>
+                <Button size="lg" onClick={handleContinue}>
+                  Continuar
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Confirmation */}
+          {step === 3 && selectedDate && (
+            <div className="animate-fade-in max-w-xl mx-auto">
+              <div className="bg-card rounded-xl p-6 sm:p-8 shadow-card">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                     <Check className="w-8 h-8 text-primary" />
@@ -251,9 +285,21 @@ const BookingSection = () => {
 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between py-3 border-b border-border">
-                    <span className="text-muted-foreground">Servicio</span>
+                    <span className="text-muted-foreground">Nombre</span>
                     <span className="font-medium text-foreground">
-                      {selectedServiceData.name}
+                      {fullName}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-border">
+                    <span className="text-muted-foreground">Teléfono</span>
+                    <span className="font-medium text-foreground">
+                      {phoneNumber}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-3 border-b border-border">
+                    <span className="text-muted-foreground">Cita</span>
+                    <span className="font-medium text-foreground">
+                      Consulta Dermatológica
                     </span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-border">
@@ -268,36 +314,29 @@ const BookingSection = () => {
                       {selectedTime}
                     </span>
                   </div>
-                  <div className="flex justify-between py-3 border-b border-border">
-                    <span className="text-muted-foreground">Duración</span>
-                    <span className="font-medium text-foreground">
-                      {selectedServiceData.duration}
-                    </span>
-                  </div>
                   <div className="flex justify-between py-3">
                     <span className="text-lg font-medium text-foreground">
                       Total a Pagar
                     </span>
                     <span className="text-2xl font-bold text-primary">
-                      ${selectedServiceData.price}
+                      ${APPOINTMENT_PRICE}
                     </span>
                   </div>
                 </div>
 
-                <Button className="w-full" size="lg">
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  Pagar y Confirmar
-                </Button>
+                <div className="flex gap-4">
+                  <Button variant="outline" size="lg" onClick={handleBack}>
+                    Atrás
+                  </Button>
+                  <Button className="flex-1" size="lg">
+                    <CreditCard className="w-5 h-5 mr-2" />
+                    Pagar y Confirmar
+                  </Button>
+                </div>
 
                 <p className="text-xs text-muted-foreground text-center mt-4">
                   Al confirmar, aceptas nuestros términos y condiciones de servicio.
                 </p>
-              </div>
-
-              <div className="mt-6 flex justify-center">
-                <Button variant="outline" onClick={handleBack}>
-                  Modificar Reserva
-                </Button>
               </div>
             </div>
           )}

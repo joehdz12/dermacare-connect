@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, ShoppingBag } from "lucide-react";
 import clinicHero from "@/assets/clinic-hero.jpg";
@@ -36,10 +37,10 @@ const HeroSection = () => {
               </a>
             </Button>
             <Button variant="outline-primary" size="xl" asChild>
-              <a href="#productos" className="flex items-center gap-2">
+              <Link to="/productos" className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5" />
                 Ver Productos
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
