@@ -145,7 +145,7 @@ const BookingSection = () => {
                     onSelect={setSelectedDate}
                     disabled={(date) =>
                       date < today ||
-                      date > addDays(today, 30) ||
+                      date > addDays(today, 730) ||
                       date.getDay() === 0 ||
                       date.getDay() === 6
                     }
