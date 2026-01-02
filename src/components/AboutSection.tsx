@@ -2,9 +2,9 @@ import doctorPortrait from "@/assets/doctor-portrait.jpg";
 import { Award, GraduationCap, Heart, Users } from "lucide-react";
 
 const stats = [
-  { icon: Users, value: "5,000+", label: "Pacientes Atendidos" },
-  { icon: Award, value: "15+", label: "Años de Experiencia" },
-  { icon: GraduationCap, value: "3", label: "Especializaciones" },
+  { icon: Users, value: "1,000+", label: "Pacientes Atendidos" },
+  { icon: Award, value: "10+", label: "Años de Experiencia" },
+  { icon: GraduationCap, value: "2", label: "Especializaciones" },
   { icon: Heart, value: "98%", label: "Satisfacción" },
 ];
 
@@ -17,12 +17,12 @@ const AboutSection = () => {
             <div className="relative rounded-2xl overflow-hidden shadow-elevated">
               <img
                 src={doctorPortrait}
-                alt="Dra. María Martínez"
+                alt="Dr. Alvaro J. Ramos-Rodríguez"
                 className="w-full aspect-square object-cover"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground rounded-xl p-6 shadow-card hidden sm:block">
-              <p className="font-serif text-3xl font-semibold">15+</p>
+              <p className="font-serif text-3xl font-semibold">10+</p>
               <p className="text-sm opacity-90">Años de experiencia</p>
             </div>
           </div>
@@ -32,21 +32,21 @@ const AboutSection = () => {
               Conóceme
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-              Dra. María Martínez
+              Dr. Alvaro J. Ramos-Rodríguez
             </h2>
             <p className="text-lg text-primary font-medium mb-4">
-              Dermatóloga Certificada
+              Especialista en Dermatología
             </p>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              Con más de 15 años de experiencia en dermatología clínica y estética, 
-              me dedico a brindar atención de la más alta calidad. Mi enfoque 
-              combina las técnicas más avanzadas con un trato cálido y personalizado 
+              Graduado con honores en 2015, cuento con más de 10 años de experiencia 
+              diversa, especialmente en Dermatología y Medicina Interna. Me dedico a 
+              brindar atención de la más alta calidad con un enfoque personalizado 
               para cada paciente.
             </p>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Especializada en tratamientos anti-envejecimiento, acné severo y 
-              detección temprana del cáncer de piel. Mi objetivo es ayudarte a 
-              sentirte bien en tu propia piel.
+              Ubicado en Mayagüez, Puerto Rico, colaboro con diversos especialistas 
+              del grupo médico Puerto Rico Pathology Associates. Para más información, 
+              consejos o agendar una cita, llámenos al (787) 827-9393.
             </p>
 
             <div className="grid grid-cols-2 gap-4">
